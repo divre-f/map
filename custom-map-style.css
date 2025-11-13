@@ -1,0 +1,53 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #372285;
+}
+
+.map-position {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#map-container {
+    background: none;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    cursor: grab;
+    /* normaler Hand-Cursor */
+    user-select: none;
+    /* verhindert Textauswahl / durchgestrichenes Kreuz */
+    -webkit-user-drag: none;
+    /* verhindert Bild-Druck bei Drag */
+}
+
+#map-container:active {
+    cursor: grabbing;
+}
+
+#map-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+}
+
+.marker {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+    border: 2px solid white;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    /* damit Zentrum genau auf Punkt sitzt */
+}
