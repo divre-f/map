@@ -3,7 +3,7 @@ const map = L.map('map').setView([20, 0], 2); // [Breite, Länge], Zoomstufe
 
 // Karten-Layer laden (OpenStreetMap)
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
+    maxZoom: 25,
 }).addTo(map);
 
 // Beispielpunkte (Marker)
@@ -21,4 +21,5 @@ points.forEach(p => {
         .on('click', () => {
             console.log(`${p.name} wurde angeklickt`);
         });
+
 });
