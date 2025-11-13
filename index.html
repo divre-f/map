@@ -2,21 +2,23 @@
 <html lang="de">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Interaktive Weltkarte</title>
-
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="map-style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Map Beispiel</title>
+    <link rel="stylesheet" href="custom-map-style.css">
 </head>
 
 <body>
-    <div id="map"></div>
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="map-script.js"></script>
+    <section class="map-position">
+        <div id="map-container">
+            <img id="map-image" src="img/map.png" alt="Karte">
+            <div class="marker" data-x="0.52" data-y="0.45" data-name="Berlin"></div>
+            <div class="marker" data-x="0.8" data-y="0.54" data-name="Tokyo"></div>
+        </div>
+    </section>
+
+    <script src="custom-map-script.js"></script>
 </body>
 
-
 </html>
+
