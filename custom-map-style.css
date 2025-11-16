@@ -5,7 +5,6 @@ body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    background-color: #372285;
 }
 
 .map-position {
@@ -14,6 +13,20 @@ body {
     align-items: center;
     width: 100%;
 }
+
+#map-container {
+    will-change: transform;
+    transition: transform 0.3s ease-out;
+}
+
+#map-image {
+    transition: transform 0.3s ease-out;
+}
+
+.marker {
+    transition: transform 0.3s ease-out;
+}
+
 
 #map-container {
     background: none;
@@ -38,7 +51,34 @@ body {
     top: 0;
     left: 0;
     transform-origin: 0 0;
+    width: 100%;
+    /* SVG füllt Container */
+    height: 100%;
+    /* optional, je nach Verhältnis */
+
 }
+
+/* Milchiges Inneres */
+#map-image .fill-layer path {
+    fill: white;
+    opacity: 0.15;
+    stroke: none;
+}
+
+/* Scharfe Linien */
+#map-image .stroke-layer path {
+    fill: none;
+    stroke: white;
+    stroke-width: 2;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1))
+        /* Weißer, scharfer Schatten */
+        drop-shadow(0 0 30px rgba(255, 255, 255, 0.8))
+        /* Größerer Schatten mit etwas Transparenz */
+}
+
+
+
+
 
 .marker {
     position: absolute;
@@ -51,3 +91,18 @@ body {
     transform: translate(-50%, -50%);
     /* damit Zentrum genau auf Punkt sitzt */
 }
+
+/*
+.bg-image {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("img/bg.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+
+}*/
