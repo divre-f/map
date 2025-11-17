@@ -14,6 +14,21 @@
             <div id="map-image-container">
                 <svg id="map-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2754 1549.125">
                     <defs>
+    <filter id="inner-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <!-- Weiche Kante erzeugen -->
+      <feGaussianBlur in="SourceAlpha" stdDeviation="15" result="blur" />
+
+      <!-- Blur invertieren (damit er nur innen sichtbar ist) -->
+      <feComposite in="blur" in2="SourceAlpha" operator="arithmetic"
+                   k2="-1" k3="1" result="inner" />
+
+      <!-- Farbe auf den inneren Bereich legen -->
+      <feFlood flood-color="red" result="color" />
+      <feComposite in="color" in2="inner" operator="in" result="coloredGlow" />
+
+      <!-- Original + inner glow zusammenfügen -->
+      <feComposite in="SourceGraphic" in2="coloredGlow" operator="over" />
+    </filter>
                     </defs>
                     <g class="fill-layer">
                         <g>
@@ -784,5 +799,6 @@
 
 
 </html>
+
 
 
