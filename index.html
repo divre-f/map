@@ -14,16 +14,6 @@
             <div id="map-image-container">
                 <svg id="map-image" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2754 1549.125">
                     <defs>
-   <filter id="inner-glow" x="-50%" y="-50%" width="200%" height="200%">
-      <!-- Glow -->
-      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur"/>
-      <!-- Innen beschneiden -->
-      <feComposite in="SourceGraphic" in2="blur" operator="arithmetic"
-                   k2="-1" k3="1" result="innerGlow"/>
-      <feMerge>
-        <feMergeNode in="innerGlow"/>
-      </feMerge>
-    </filter>
                     </defs>
                     <g class="fill-layer">
                         <g>
@@ -794,4 +784,5 @@
 
 
 </html>
+
 
