@@ -70,7 +70,7 @@ body {
     fill: none;
     stroke: white;
     stroke-width: 2;
-    box-shadow: inset 0 0 30px #fff;
+    box-shadow: inset 0 0 30px #FF0000;
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1))
         /* Weißer, scharfer Schatten */
         drop-shadow(0 0 30px rgba(255, 255, 255, 0.8))
@@ -108,6 +108,7 @@ body {
 
 
 }*/
+
 
 
 
