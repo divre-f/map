@@ -62,7 +62,6 @@ body {
 #map-image .fill-layer path {
     fill: white;
     opacity: 0.15;
-    filter: url(#inner-glow);
     stroke: none;
     
 }
@@ -109,6 +108,7 @@ body {
 
 
 }*/
+
 
 
 
