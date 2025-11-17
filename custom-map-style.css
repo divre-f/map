@@ -61,7 +61,7 @@ body {
 /* Milchiges Inneres */
 #map-image .fill-layer path {
     fill: white;
-    opacity: 0.5;
+    opacity: 1;
     stroke: none;
 }
 
@@ -107,5 +107,6 @@ body {
 
 
 }*/
+
 
 
