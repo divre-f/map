@@ -122,7 +122,7 @@ function zoomToMarker(marker, targetScale = 2.5, offsetX = 0, offsetY = 0) {
 markers.forEach(marker => {
     marker.addEventListener('click', () => {
         const offsetX = -300;  // Offset für den gewünschten Effekt anpassen
-        const offsetY = 600;   // Offset anpassen
+        const offsetY = 300;   // Offset anpassen
 
         zoomToMarker(marker, 2.5, offsetX, offsetY);  // Zoom mit Offset auf den Marker
     });
@@ -167,3 +167,4 @@ function updateMarkers() {
         marker.style.transform = `translate(${screenX}px, ${screenY}px) translate(-50%, -50%)`;
     });
 }
+
