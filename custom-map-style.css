@@ -88,8 +88,8 @@ body {
 .marker {
     position: absolute;
     z-index: 10;
-    width: 30px;
-    height: 30px;
+    width: 10px;
+    height: 10px;
     border: 2px solid #00ffff;
     border-radius: 50%;
     cursor: pointer;
@@ -132,5 +132,6 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     z-index: -1;
+
 
 }
