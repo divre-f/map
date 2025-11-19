@@ -15,32 +15,42 @@ body {
     height: 100vh;
 }
 
+
+
 #map-container {
+    background: none;
     position: relative;
     width: 100%;
     height: 100%;
     overflow: hidden;
-    cursor: default;
+    cursor: grab;
     user-select: none;
-    will-change: transform;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    -webkit-user-drag: none;
+}
+
+#map-container:active {
+    cursor: grabbing;
 }
 
 #map-3d-wrapper {
     position: relative;
     width: 100%;
     height: 100%;
-    will-change: transform;
     transform-style: preserve-3d;
-    transition: transform 1s ease-out;
+    transition: transform 0.5s ease;
+}
+
+#map-3d-wrapper.map-tilted {
+    transform: perspective(800px) rotateX(70deg);
 }
 
 #map-image-container {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+    transition: transform 0.3s ease-out;
 }
 
 #map-image {
@@ -49,51 +59,14 @@ body {
     height: 100%;
     transform-origin: 0 0;
     shape-rendering: geometricPrecision;
-    transition: transform 1s ease-out;
 }
 
-/* Tilt-Effekt für die Karte */
-#map-3d-wrapper.map-tilted {
-    transform: perspective(800px) rotateX(70deg);
-    /* Perspektive und Rotation hinzufügen */
-}
+#map-image.is-moving {
+    /* NUR während der Bewegung aktivieren wir den Turbo */
+    will-change: transform;
 
-/* Marker-Styling */
-.marker {
-    position: absolute;
-    z-index: 30;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #00ffff;
-    border-radius: 50%;
-    cursor: pointer;
-    pointer-events: auto;
-    background-color: #fff;
-    filter: blur(0.2rem);
-    box-shadow: 0px 0px 21px 4px rgba(255, 255, 255, 0.9);
-    transition: transform 1s ease-out;
-}
-
-/* Marker unsichtbar machen */
-.marker.zoom-hidden {
-    opacity: 0;
-    transition: opacity 0.4s ease-out;
-    /* Nur die Opazität animieren */
-}
-
-#marker1 {
-    top: 30%;
-    left: 20%;
-}
-
-#marker2 {
-    top: 60%;
-    left: 40%;
-}
-
-#marker3 {
-    top: 30%;
-    left: 70%;
+    /* Optional: Rendern auf Speed optimieren (kann bei SVGs helfen) */
+    shape-rendering: optimizeSpeed;
 }
 
 /* Milchiges Inneres */
@@ -116,7 +89,64 @@ body {
 
 
 
-/* Hintergrundbild */
+
+.marker {
+    position: absolute;
+    z-index: 10;
+    r: 25;
+    border-radius: 50%;
+    cursor: pointer;
+    fill: #fff;
+    /* Weißer Hintergrund */
+    stroke: #00ffff;
+    /* Heller, cyanfarbener Rand */
+    stroke-width: 2px;
+    /* Dicke des Randes */
+    filter: blur(0.4rem);
+    /* Unscharf-Effekt auf Hintergrund anwenden */
+    -webkit-box-shadow: 0px 0px 40px 4px rgba(255, 255, 255, 0.9);
+    -moz-box-shadow: 0px 0px 40px 4px rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 0px 40px 4px rgba(255, 255, 255, 0.9);
+    transform-origin: center center;
+    transform-box: fill-box;
+    animation: pulse-glow 4s infinite ease-in-out;
+}
+
+.marker.is-moving {
+    will-change: transform;
+}
+
+@keyframes pulse-glow {
+    0% {
+        r: 25px;
+        stroke-width: 2px;
+        filter: blur(0.4rem);
+        opacity: 1;
+    }
+
+    50% {
+        r: 35px;
+        /* Kreis wird physisch größer */
+        stroke-width: 4px;
+        /* Rand wird dicker */
+        filter: blur(0.5rem);
+        /* Wird etwas unschärfer/leuchtender */
+        opacity: 0.8;
+        /* Leichtes Flackern */
+    }
+
+    100% {
+        r: 25px;
+        stroke-width: 2px;
+        filter: blur(0.4rem);
+        opacity: 1;
+    }
+}
+
+
+
+
+
 .bg-image {
     position: fixed;
     top: 0;
@@ -128,4 +158,5 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     z-index: -1;
+
 }
