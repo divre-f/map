@@ -83,16 +83,19 @@ body {
 
 
 
+
+
 .marker {
     position: absolute;
     z-index: 10;
-    width: 10px;
-    height: 10px;
-    border: 2px solid #00ffff;
     border-radius: 50%;
     cursor: pointer;
-    background-color: #fff;
-    /* Weißer Hintergrund für den Marker */
+    fill: #fff;
+    /* Weißer Hintergrund */
+    stroke: #00ffff;
+    /* Heller, cyanfarbener Rand */
+    stroke-width: 2px;
+    /* Dicke des Randes */
     filter: blur(0.2rem);
     /* Unscharf-Effekt auf Hintergrund anwenden */
     -webkit-box-shadow: 0px 0px 21px 4px rgba(255, 255, 255, 0.9);
@@ -101,6 +104,9 @@ body {
     transition: transform 0.3s ease-out;
     /* Der Marker selbst bleibt unscharf */
 }
+
+
+
 
 
 .bg-image {
@@ -115,7 +121,4 @@ body {
     background-repeat: no-repeat;
     z-index: -1;
 
-
 }
-
-
