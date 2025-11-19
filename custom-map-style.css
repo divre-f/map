@@ -12,50 +12,61 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
+    height: 100vh;
 }
 
-#map-container {
-    will-change: transform;
-    transition: transform 0.3s ease-out;
-}
-
-#map-image {
-    transition: transform 0.3s ease-out;
-}
-
-.marker {
-    transition: transform 0.3s ease-out;
-}
 
 
 #map-container {
     background: none;
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     cursor: grab;
-    /* normaler Hand-Cursor */
     user-select: none;
-    /* verhindert Textauswahl / durchgestrichenes Kreuz */
     -webkit-user-drag: none;
-    /* verhindert Bild-Druck bei Drag */
 }
 
 #map-container:active {
     cursor: grabbing;
 }
 
-#map-image {
+#map-3d-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+}
+
+#map-3d-wrapper.map-tilted {
+    transform: perspective(800px) rotateX(70deg);
+}
+
+#map-image-container {
     position: absolute;
     top: 0;
     left: 0;
-    transform-origin: 0 0;
     width: 100%;
-    /* SVG füllt Container */
     height: 100%;
-    /* optional, je nach Verhältnis */
+    transition: transform 0.3s ease-out;
+}
 
+#map-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-origin: 0 0;
+    shape-rendering: geometricPrecision;
+}
+
+#map-image.is-moving {
+    /* NUR während der Bewegung aktivieren wir den Turbo */
+    will-change: transform;
+
+    /* Optional: Rendern auf Speed optimieren (kann bei SVGs helfen) */
+    shape-rendering: optimizeSpeed;
 }
 
 /* Milchiges Inneres */
@@ -77,19 +88,81 @@ body {
 }
 
 
-
-
-
 .marker {
     position: absolute;
-    width: 20px;
-    height: 20px;
-    background: red;
+    z-index: 10;
+    r: 25;
     border-radius: 50%;
-    border: 2px solid white;
     cursor: pointer;
-    transform: translate(-50%, -50%);
-    /* damit Zentrum genau auf Punkt sitzt */
+    fill: #fff;
+    /* Weißer Hintergrund */
+    stroke: #00ffff;
+    /* Heller, cyanfarbener Rand */
+    stroke-width: 2px;
+    /* Dicke des Randes */
+    filter: blur(0.4rem);
+    /* Unscharf-Effekt auf Hintergrund anwenden */
+    -webkit-box-shadow: 0px 0px 40px 4px rgba(255, 255, 255, 0.9);
+    -moz-box-shadow: 0px 0px 40px 4px rgba(255, 255, 255, 0.9);
+    box-shadow: 0px 0px 40px 4px rgba(255, 255, 255, 0.9);
+    transform-origin: center center;
+    transform-box: fill-box;
+    animation: pulse-glow 4s infinite ease-in-out;
+}
+
+.marker.is-moving {
+    will-change: transform;
+}
+
+@keyframes pulse-glow {
+    0% {
+        r: 25px;
+        stroke-width: 2px;
+        filter: blur(0.4rem);
+        opacity: 1;
+    }
+
+    50% {
+        r: 35px;
+        /* Kreis wird physisch größer */
+        stroke-width: 4px;
+        /* Rand wird dicker */
+        filter: blur(0.5rem);
+        /* Wird etwas unschärfer/leuchtender */
+        opacity: 0.8;
+        /* Leichtes Flackern */
+    }
+
+    100% {
+        r: 25px;
+        stroke-width: 2px;
+        filter: blur(0.4rem);
+        opacity: 1;
+    }
+}
+
+
+#reset-map-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    /* HIER: Rechts statt links */
+    left: auto;
+    /* Sicherstellen, dass left nicht greift */
+    z-index: 100;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    /* Kleiner Bonus: Milchglas-Effekt */
+    transition: background 0.3s;
+}
+
+#reset-map-btn:hover {
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 
