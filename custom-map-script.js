@@ -1,238 +1,96 @@
 const mapContainer = document.getElementById('map-container');
-const map3dWrapper = document.getElementById('map-3d-wrapper');
 const mapImage = document.getElementById('map-image');
 const markers = document.querySelectorAll('.marker');
-const resetButton = document.getElementById('reset-map-btn');
 
-// --- PHYSIK KONFIGURATION ---
-const LERP_FAST = 0.2;  // Für Dragging/Mausrad (Direkt)
-const LERP_SLOW = 0.08; // Für Marker-Klick (Cinematic)
+let scale, originX = 0, originY = 0;
+let isDragging = false, startX, startY;
 
-// --- STATE ---
-let state = {
-    // Wo die Karte IST (wird langsam angepasst)
-    currentX: 0,
-    currentY: 0,
-    currentScale: 1,
+let isAnimating = false; // Flag, um zu prüfen, ob Animation läuft
 
-    // Wo die Karte HIN SOLL (Maus/Ziel)
-    targetX: 0,
-    targetY: 0,
-    targetScale: 1,
+function update() {
+    if (isAnimating) return;  // Verhindert doppelte Animationen
+    isAnimating = true;
 
-    isDragging: false,
-    startX: 0,
-    startY: 0,
+    // Hier kommt dein Code zum Animieren und Aktualisieren der Marker
 
-    // Startposition der Targets beim Drag-Beginn
-    dragStartTargetX: 0,
-    dragStartTargetY: 0,
-    currentLerp: LERP_FAST
-};
-
-// ViewBox Daten
-const viewBox = mapImage.viewBox.baseVal;
-const mapAspectRatio = viewBox.width / viewBox.height;
-
-// --- MATHE HELFER ---
-// Linear Interpolation: Bewegt "start" langsam Richtung "end"
-function lerp(start, end, factor) {
-    return start + (end - start) * factor;
+    isAnimating = false;
 }
 
-// Exakte Kartengröße berechnen (für Marker-Treffer)
-function getRenderedMapStats() {
-    const containerW = mapContainer.clientWidth;
-    const containerH = mapContainer.clientHeight;
-    const containerRatio = containerW / containerH;
+document.addEventListener('mousemove', () => {
+    window.requestAnimationFrame(update);  // Auf die nächste Frame warten
+});
 
-    let renderedW, renderedH, offsetX, offsetY;
-
-    if (containerRatio > mapAspectRatio) {
-        renderedH = containerH;
-        renderedW = containerH * mapAspectRatio;
-        offsetX = (containerW - renderedW) / 2;
-        offsetY = 0;
-    } else {
-        renderedW = containerW;
-        renderedH = containerW / mapAspectRatio;
-        offsetX = 0;
-        offsetY = (containerH - renderedH) / 2;
-    }
-    return { width: renderedW, height: renderedH, left: offsetX, top: offsetY };
-}
-
-// --- GAME LOOP (Läuft dauerhaft für Physik) ---
-// --- GAME LOOP (Mit Schärfe-Automatik) ---
-function renderLoop() {
-    // 1. Physik berechnen
-    state.currentX = lerp(state.currentX, state.targetX, state.currentLerp);
-    state.currentY = lerp(state.currentY, state.targetY, state.currentLerp);
-    state.currentScale = lerp(state.currentScale, state.targetScale, state.currentLerp);
-
-    // 2. DOM Update
-    mapImage.style.transform = `translate(${state.currentX}px, ${state.currentY}px) scale(${state.currentScale})`;
-
-    // 3. Marker skalieren
-    const inverseScale = 1 / state.currentScale;
+// Marker-Update-Funktion
+function updateMarkers() {
     markers.forEach(marker => {
-        marker.style.transform = `scale(${inverseScale})`;
+        const x = parseFloat(marker.dataset.x) * mapImage.viewBox.baseVal.width;
+        const y = parseFloat(marker.dataset.y) * mapImage.viewBox.baseVal.height;
+
+        // Marker Positionen relativ zur transformierten Karte
+        const markerTransform = `translate(${originX + x * scale}px, ${originY + y * scale}px)`;
+        marker.style.transform = markerTransform;  // Marker mit der gleichen Transformation verschieben
     });
-
-    // --- NEU: SCHÄRFE MANAGEMENT ---
-    // Wir prüfen, ob sich die Karte noch signifikant bewegt.
-    // Da Lerp nie ganz 0 erreicht, definieren wir eine winzige Toleranzgrenze (Epsilon).
-    const diffX = Math.abs(state.targetX - state.currentX);
-    const diffY = Math.abs(state.targetY - state.currentY);
-    const diffScale = Math.abs(state.targetScale - state.currentScale);
-
-    // Bewegt sich die Karte noch mehr als 0.5 Pixel oder skaliert sie noch?
-    const isMoving = (diffX > 0.5 || diffY > 0.5 || diffScale > 0.002);
-
-    if (isMoving) {
-        // Wir bewegen uns -> Performance Modus an (leicht unscharf, aber flüssig)
-        if (!mapImage.classList.contains('is-moving')) {
-            mapImage.classList.add('is-moving');
-            // Optional: Auch Marker optimieren
-            markers.forEach(m => m.classList.add('is-moving'));
-        }
-    } else {
-        // Wir stehen fast still -> Scharfschalten (High Quality Repaint)
-        if (mapImage.classList.contains('is-moving')) {
-            mapImage.classList.remove('is-moving');
-            markers.forEach(m => m.classList.remove('is-moving'));
-
-            // Optional: Um ganz sicher zu gehen, setzen wir current exakt auf target,
-            // damit der Loop nicht ewig minimal weiterrechnet.
-            state.currentX = state.targetX;
-            state.currentY = state.targetY;
-            state.currentScale = state.targetScale;
-        }
-    }
-
-    // Loop am Leben halten
-    requestAnimationFrame(renderLoop);
 }
+// Alles erst ausführen, wenn Seite geladen ist
+window.addEventListener("load", () => {
+    const containerWidth = mapContainer.clientWidth;
+    const containerHeight = mapContainer.clientHeight;
 
+    const mapWidth = mapContainer.clientWidth;  // Containergröße
+    const mapHeight = mapContainer.clientHeight;
 
-// --- INIT ---
-function init() {
-    state.currentX = 0; state.targetX = 0;
-    state.currentY = 0; state.targetY = 0;
-    state.currentScale = 1; state.targetScale = 1;
+    scale = 1; // 1 = volle Größe des Containers
+    originX = 0;
+    originY = 0;
 
-    // Loop starten
-    requestAnimationFrame(renderLoop);
-}
+    mapImage.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+    updateMarkers();
+    // Karte zentrieren
+    originX = (containerWidth - mapWidth * scale) / 2;
+    originY = (containerHeight - mapHeight * scale) / 2;
 
+    // Transform anwenden
+    mapImage.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+    updateMarkers();
+});
 
-// --- DRAGGING LOGIK ---
+// Drag starten
 mapContainer.addEventListener('mousedown', (e) => {
     e.preventDefault();
-    state.currentLerp = LERP_FAST;
-    state.isDragging = true;
-    mapContainer.style.cursor = 'grabbing';
-
-    // Wir merken uns, wo die Maus RELATIV zum aktuellen Ziel war
-    state.startX = e.clientX;
-    state.startY = e.clientY;
-
-    // Wir merken uns, wo das Target zu Beginn war
-    state.dragStartTargetX = state.targetX;
-    state.dragStartTargetY = state.targetY;
+    isDragging = true;
+    startX = e.clientX - originX;
+    startY = e.clientY - originY;
 });
 
-window.addEventListener('mousemove', (e) => {
-    if (!state.isDragging) return;
-    state.currentLerp = LERP_FAST;
-    e.preventDefault();
-
-    // Wie weit hat sich die Maus bewegt?
-    const dx = e.clientX - state.startX;
-    const dy = e.clientY - state.startY;
-
-    // Wir setzen das ZIEL (Target).
-    // Der renderLoop() kümmert sich darum, dass die Karte "hinterherfährt".
-    state.targetX = state.dragStartTargetX + dx;
-    state.targetY = state.dragStartTargetY + dy;
+document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    originX = e.clientX - startX;
+    originY = e.clientY - startY;
+    mapImage.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+    updateMarkers();
 });
 
-window.addEventListener('mouseup', () => {
-    state.isDragging = false;
-    mapContainer.style.cursor = 'grab';
-});
+document.addEventListener('mouseup', () => isDragging = false);
 
-
-// --- ZOOM LOGIK (Wheel) ---
+// Zoom
 mapContainer.addEventListener('wheel', (e) => {
     e.preventDefault();
-    state.currentLerp = LERP_FAST;
+    const oldScale = scale;
+    scale += e.deltaY * -0.0015;
+    scale = Math.min(Math.max(0.3, scale), 10); // Min/Max Zoom anpassen
 
-    // Ziel-Scale berechnen
-    const oldScale = state.targetScale; // Wir rechnen mit dem Ziel-Scale für Stabilität
-    const zoomIntensity = 0.0015;
-    let newScale = oldScale + (e.deltaY * -zoomIntensity);
-    newScale = Math.min(Math.max(0.5, newScale), 10);
-
-    // Zoom auf Mausposition
     const rect = mapContainer.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+    const mx = e.clientX - rect.left - originX;
+    const my = e.clientY - rect.top - originY;
 
-    const scaleChange = newScale / oldScale;
+    originX -= (scale / oldScale - 1) * mx;
+    originY -= (scale / oldScale - 1) * my;
 
-    // Wir updaten nur die Targets! Die Physik macht den Rest weich.
-    state.targetX = mouseX - (mouseX - state.targetX) * scaleChange;
-    state.targetY = mouseY - (mouseY - state.targetY) * scaleChange;
-    state.targetScale = newScale;
+    mapImage.style.transform = `translate(${originX}px, ${originY}px) scale(${scale})`;
+    updateMarkers();
+});
 
-}, { passive: false });
-
-
-// --- MARKER KLICK (Zielanfahrt) ---
-function zoomToMarker(marker) {
-    map3dWrapper.classList.add("map-tilted");
-    state.currentLerp = LERP_SLOW;
-
-    const stats = getRenderedMapStats();
-    const cx = parseFloat(marker.getAttribute('cx'));
-    const cy = parseFloat(marker.getAttribute('cy'));
-
-    const markerPixelX = stats.left + (cx / 100) * stats.width;
-    const markerPixelY = stats.top + (cy / 100) * stats.height;
-
-    const targetZoom = 5.0;
-    const centerX = mapContainer.clientWidth / 2;
-    const centerY = mapContainer.clientHeight / 2;
-
-    // Wir setzen einfach harte neue TARGETS.
-    // Der renderLoop fährt diese dann automatisch weich an (wegen Lerp).
-    state.targetScale = targetZoom;
-    state.targetX = centerX - (markerPixelX * targetZoom);
-    state.targetY = centerY - (markerPixelY * targetZoom);
-
-    // Optional: Wir können für den Klick den Lerp kurz ändern, 
-    // wenn wir wollen, dass er schneller/langsamer hinfährt, 
-    // aber der Standard-Lerp sieht meistens sehr organisch aus.
-}
-
+// Marker Click
 markers.forEach(marker => {
-    marker.addEventListener('click', (e) => {
-        e.stopPropagation();
-        zoomToMarker(marker);
-    });
+    marker.addEventListener('click', () => alert('Marker: ' + marker.dataset.name));
 });
-
-
-// --- RESET ---
-resetButton.addEventListener('click', () => {
-    map3dWrapper.classList.remove("map-tilted");
-    // Einfach Targets zurücksetzen -> Karte "fliegt" zurück
-    state.targetScale = 1;
-    state.targetX = 0;
-    state.targetY = 0;
-});
-
-// Start
-window.addEventListener('load', init);
-window.addEventListener('resize', init);
