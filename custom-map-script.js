@@ -5,8 +5,8 @@ const markers = document.querySelectorAll('.marker');
 const resetButton = document.getElementById('reset-map-btn');
 
 // --- KONFIGURATION ---
-const LERP_FAST = 0.25;
-const LERP_SLOW = 0.12;
+const LERP_FAST = 0.15;
+const LERP_SLOW = 0.08;
 
 const MAX_TILT = 70;
 const PERSPECTIVE = 800;
@@ -51,6 +51,21 @@ function getRenderedMapStats() {
     return { width: renderedW, height: renderedH, left: offsetX, top: offsetY };
 }
 
+// --- OPTIMIERUNG: GLOW LAYER ERSTELLEN ---
+function createGlowLayer() {
+    const strokeLayer = document.querySelector('.stroke-layer');
+    if (!strokeLayer) return; 
+
+    const glowLayer = strokeLayer.cloneNode(true);
+    glowLayer.classList.remove('stroke-layer');
+    glowLayer.classList.add('glow-layer'); 
+    glowLayer.style.pointerEvents = 'none';
+
+    strokeLayer.parentNode.insertBefore(glowLayer, strokeLayer);
+}
+
+window.addEventListener('load', createGlowLayer);
+
 // --- RENDER LOOP ---
 function renderLoop() {
     state.currentX = lerp(state.currentX, state.targetX, state.currentLerp);
@@ -73,10 +88,11 @@ function renderLoop() {
     const diffScale = Math.abs(state.targetScale - state.currentScale);
     const diffTilt = Math.abs(state.targetTilt - state.currentTilt);
 
+    // Etwas höhere Toleranz für smootheres Einrasten
     const isAlmostThere = (diffX < 0.8 && diffY < 0.8 && diffScale < 0.005 && diffTilt < 0.5);
 
     if (!isAlmostThere) {
-        // BEWEGUNG -> Alles abschalten (Schatten Map + Marker)
+        // BEWEGUNG -> Performance Mode AN
         if (!mapImage.classList.contains('is-moving')) {
             mapImage.classList.add('is-moving');
             markers.forEach(m => m.classList.add('is-moving'));
@@ -95,6 +111,7 @@ function renderLoop() {
             const exactInverse = 1 / state.currentScale;
             markers.forEach(m => m.style.transform = `scale(${exactInverse})`);
 
+            // Hier wird die Klasse entfernt -> CSS Transition (0.8s) greift
             mapImage.classList.remove('is-moving');
             markers.forEach(m => m.classList.remove('is-moving'));
         }
@@ -162,22 +179,13 @@ mapContainer.addEventListener('wheel', (e) => {
 
     const oldScale = state.targetScale;
 
-    // --- HIER IST DER FIX ---
-    // Standard-Intensität für die Maus (wie vorher)
+    // Trackpad Detection
     let zoomIntensity = 0.0015;
-
-    // Check: Ist das ein Trackpad?
-    // Trackpads senden sehr kleine Werte (meist unter 40).
-    // Mäuse senden meist Werte um 100.
     const isTrackpad = Math.abs(e.deltaY) < 40;
-
     if (isTrackpad) {
-        // Wenn Trackpad: Intensität massiv erhöhen!
-        // Probier hier Werte zwischen 0.01 und 0.03
         zoomIntensity = 0.02;
     }
 
-    // Berechnung wie gehabt
     let newScale = oldScale + (e.deltaY * -zoomIntensity);
     newScale = Math.min(Math.max(0.5, newScale), 10);
 

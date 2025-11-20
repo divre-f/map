@@ -53,46 +53,56 @@ body {
     height: 100%;
     transform-origin: 0 0;
     shape-rendering: geometricPrecision;
-    /* Hohe Qualität im Stand */
 }
 
-/* --- KARTEN DETAILS (Normalzustand) --- */
+/* --- KARTEN DETAILS --- */
 
 /* Milchiges Inneres */
 #map-image .fill-layer path {
     fill: white;
     opacity: 0.15;
     stroke: none;
-    transition: opacity 0.2s;
-    /* Weicher Übergang */
+    transition: opacity 1s;
 }
 
-/* Scharfe Linien & Schatten */
+/* Scharfe Linien (Der Kern) */
 #map-image .stroke-layer path {
     fill: none;
     stroke: white;
     stroke-width: 2;
-    /* Der Glow im Ruhezustand */
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1)) drop-shadow(0 0 30px rgba(255, 255, 255, 0.8));
-    transition: filter 0.6s ease-out, stroke-width 0.2s;
+    filter: none; /* Kein Filter hier für Performance! */
+    transition: stroke-width 0.2s;
 }
 
-/* --- PERFORMANCE MODUS FÜR DIE KARTE (Der Fix!) --- */
-/* Sobald .is-moving auf dem #map-image liegt: */
+/* --- DER GLOW LAYER (Optimiert) --- */
+#map-image .glow-layer {
+    opacity: 1;
+    transition: opacity 1s ease; 
+    pointer-events: none;
+}
 
+/* 2. Die Pfade darin regeln nur das Aussehen */
+#map-image .glow-layer path {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.6); 
+    stroke-width: 8px; 
+    /* Einmaliger Blur, der sich nicht ändert = Performant */
+    filter: blur(20px); 
+}
+
+/* --- PERFORMANCE MODUS (Bewegung) --- */
 #map-image.is-moving {
     will-change: transform;
-    /* Optional: Ganze Karte rendert schneller, aber pixeliger */
     shape-rendering: optimizeSpeed;
 }
 
-#map-image.is-moving .stroke-layer path {
-    filter: none !important;
-    transition: none !important;
+/* Wenn bewegt: Glow Layer sofort ausblenden */
+#map-image.is-moving .glow-layer {
+    opacity: 0;
+    transition: none; /* Sofort weg! */
 }
 
 #map-image.is-moving .fill-layer path {
-    /* Optional: Füllung transparenter machen für Speed */
     opacity: 0.1;
 }
 
@@ -105,37 +115,29 @@ body {
 
     /* Basis-Werte */
     r: 25px;
-    fill: rgba(255, 255, 255, 0.85);
-    /* Milchig */
+    fill: rgba(255, 255, 255, 1);
     stroke: #00ffff;
-    stroke-width: 2px;
+    stroke-width: 5px;
     cursor: pointer;
 
     transform-origin: center center;
     transform-box: fill-box;
-
-    /* HIER DER FIX: Wir verweisen auf die ID im HTML */
-    /* Das repariert das Abschneiden in Chrome */
+    
+    /* Filter Referenz für Chrome-Fix */
     filter: url(#soft-glow);
-
-    /* Fallback für Animation (Größe) */
+    
     animation: pulse-size 3s infinite ease-in-out;
-
-    /* Transition für das Einblenden nach dem Stop */
-    transition: filter 0.3s ease-out, opacity 0.3s;
+    
+    /* Sanftes Einblenden des Filters/Opacity */
+    transition: filter 0.5s ease-out, opacity 0.3s;
 }
 
 /* Performance Modus Marker */
 .marker.is-moving {
     animation: none !important;
-
-    /* Alles aus -> Schnell */
     filter: none !important;
-
-    /* Solid machen für Speed */
     fill: #fff !important;
     opacity: 0.8;
-
     will-change: transform;
     r: 25px !important;
     stroke-width: 2px !important;
@@ -143,27 +145,12 @@ body {
 }
 
 @keyframes pulse-size {
-    0% {
-        r: 25px;
-        stroke-width: 2px;
-        opacity: 1;
-    }
-
-    50% {
-        r: 30px;
-        /* Filter wächst automatisch mit! */
-        stroke-width: 3px;
-        opacity: 0.9;
-    }
-
-    100% {
-        r: 25px;
-        stroke-width: 2px;
-        opacity: 1;
-    }
+    0% { r: 25px; stroke-width: 5px; opacity: 1; }
+    50% { r: 30px; stroke-width: 10px; opacity: 1; }
+    100% { r: 25px; stroke-width: 5px; opacity: 1; }
 }
 
-/* Alles andere durchlässig machen zum Testen */
+/* Pointer Events Fix */
 #map-image .fill-layer,
 #map-image .stroke-layer {
     pointer-events: none;
@@ -188,8 +175,6 @@ body {
 #reset-map-btn:hover {
     background-color: rgba(0, 0, 0, 0.8);
 }
-
-
 
 .bg-image {
     position: fixed;
