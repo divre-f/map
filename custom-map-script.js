@@ -159,14 +159,33 @@ mapContainer.addEventListener('click', (e) => {
 mapContainer.addEventListener('wheel', (e) => {
     e.preventDefault();
     state.currentLerp = LERP_FAST;
+
     const oldScale = state.targetScale;
-    const zoomIntensity = 0.0015;
+
+    // --- HIER IST DER FIX ---
+    // Standard-Intensität für die Maus (wie vorher)
+    let zoomIntensity = 0.0015;
+
+    // Check: Ist das ein Trackpad?
+    // Trackpads senden sehr kleine Werte (meist unter 40).
+    // Mäuse senden meist Werte um 100.
+    const isTrackpad = Math.abs(e.deltaY) < 40;
+
+    if (isTrackpad) {
+        // Wenn Trackpad: Intensität massiv erhöhen!
+        // Probier hier Werte zwischen 0.01 und 0.03
+        zoomIntensity = 0.02;
+    }
+
+    // Berechnung wie gehabt
     let newScale = oldScale + (e.deltaY * -zoomIntensity);
     newScale = Math.min(Math.max(0.5, newScale), 10);
+
     const rect = mapContainer.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
     const scaleChange = newScale / oldScale;
+
     state.targetX = mouseX - (mouseX - state.targetX) * scaleChange;
     state.targetY = mouseY - (mouseY - state.targetY) * scaleChange;
     state.targetScale = newScale;
