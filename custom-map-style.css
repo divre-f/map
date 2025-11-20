@@ -15,8 +15,6 @@ body {
     height: 100vh;
 }
 
-
-
 #map-container {
     background: none;
     position: relative;
@@ -47,7 +45,6 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    transition: transform 0.3s ease-out;
 }
 
 #map-image {
@@ -56,117 +53,127 @@ body {
     height: 100%;
     transform-origin: 0 0;
     shape-rendering: geometricPrecision;
+    /* Hohe Qualität im Stand */
 }
 
-#map-image.is-moving {
-    /* NUR während der Bewegung aktivieren wir den Turbo */
-    will-change: transform;
-
-    /* Optional: Rendern auf Speed optimieren (kann bei SVGs helfen) */
-    shape-rendering: optimizeSpeed;
-}
+/* --- KARTEN DETAILS (Normalzustand) --- */
 
 /* Milchiges Inneres */
 #map-image .fill-layer path {
     fill: white;
     opacity: 0.15;
     stroke: none;
+    transition: opacity 0.2s;
+    /* Weicher Übergang */
 }
 
-/* Scharfe Linien */
+/* Scharfe Linien & Schatten */
 #map-image .stroke-layer path {
     fill: none;
     stroke: white;
     stroke-width: 2;
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1))
-        /* Weißer, scharfer Schatten */
-        drop-shadow(0 0 30px rgba(255, 255, 255, 0.8))
-        /* Größerer Schatten mit etwas Transparenz */
+    /* Der Glow im Ruhezustand */
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 1)) drop-shadow(0 0 30px rgba(255, 255, 255, 0.8));
+    transition: filter 0.6s ease-out, stroke-width 0.2s;
 }
 
+/* --- PERFORMANCE MODUS FÜR DIE KARTE (Der Fix!) --- */
+/* Sobald .is-moving auf dem #map-image liegt: */
+
+#map-image.is-moving {
+    will-change: transform;
+    /* Optional: Ganze Karte rendert schneller, aber pixeliger */
+    shape-rendering: optimizeSpeed;
+}
+
+#map-image.is-moving .stroke-layer path {
+    filter: none !important;
+    transition: none !important;
+}
+
+#map-image.is-moving .fill-layer path {
+    /* Optional: Füllung transparenter machen für Speed */
+    opacity: 0.1;
+}
+
+
+/* --- MARKER STYLES --- */
 
 .marker {
     position: absolute;
     z-index: 10;
 
-    /* Basis-Styling */
+    /* Basis-Werte */
     r: 25px;
-    fill: #fff;
+    fill: rgba(255, 255, 255, 0.85);
+    /* Milchig */
     stroke: #00ffff;
     stroke-width: 2px;
     cursor: pointer;
 
-    /* WICHTIG: Transform-Settings */
     transform-origin: center center;
     transform-box: fill-box;
 
-    /* Standard-Zustand: Animation aktiv */
-    animation: pulse-glow 3s infinite ease-in-out;
+    /* HIER DER FIX: Wir verweisen auf die ID im HTML */
+    /* Das repariert das Abschneiden in Chrome */
+    filter: url(#soft-glow);
 
-    /* HIER: Wir nutzen filter statt box-shadow für SVGs (repariert Safari später) */
-    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
+    /* Fallback für Animation (Größe) */
+    animation: pulse-size 3s infinite ease-in-out;
 
-    /* Alte box-shadows entfernen, die bringen bei <circle> nichts außer Lag */
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
+    /* Transition für das Einblenden nach dem Stop */
+    transition: filter 0.3s ease-out, opacity 0.3s;
 }
 
-/* --- PERFORMANCE MODUS --- */
+/* Performance Modus Marker */
 .marker.is-moving {
-    /* 1. Animation pausieren oder ganz stoppen */
     animation: none !important;
 
-    /* 2. Filter/Schatten komplett entfernen -> Massive Performance-Steigerung */
+    /* Alles aus -> Schnell */
     filter: none !important;
 
-    /* 3. Optional: Marker leicht transparent machen, damit man sieht "er bewegt sich" */
-    opacity: 0.7;
+    /* Solid machen für Speed */
+    fill: #fff !important;
+    opacity: 0.8;
 
-    /* 4. Hardware-Beschleunigung forcieren */
     will-change: transform;
-
-    /* Damit der Marker nicht "springt", setzen wir feste Werte, 
-       die er ohne Animation haben soll */
     r: 25px !important;
     stroke-width: 2px !important;
+    transition: none !important;
 }
 
-@keyframes pulse-glow {
+@keyframes pulse-size {
     0% {
         r: 25px;
         stroke-width: 2px;
-        filter: blur(0.4rem);
         opacity: 1;
     }
 
     50% {
-        r: 35px;
-        /* Kreis wird physisch größer */
-        stroke-width: 4px;
-        /* Rand wird dicker */
-        filter: blur(0.5rem);
-        /* Wird etwas unschärfer/leuchtender */
-        opacity: 0.8;
-        /* Leichtes Flackern */
+        r: 30px;
+        /* Filter wächst automatisch mit! */
+        stroke-width: 3px;
+        opacity: 0.9;
     }
 
     100% {
         r: 25px;
         stroke-width: 2px;
-        filter: blur(0.4rem);
         opacity: 1;
     }
 }
 
+/* Alles andere durchlässig machen zum Testen */
+#map-image .fill-layer,
+#map-image .stroke-layer {
+    pointer-events: none;
+}
 
+/* --- UI --- */
 #reset-map-btn {
     position: absolute;
     top: 20px;
     right: 20px;
-    /* HIER: Rechts statt links */
-    left: auto;
-    /* Sicherstellen, dass left nicht greift */
     z-index: 100;
     padding: 10px 20px;
     background-color: rgba(0, 0, 0, 0.6);
@@ -175,13 +182,13 @@ body {
     border-radius: 5px;
     cursor: pointer;
     backdrop-filter: blur(5px);
-    /* Kleiner Bonus: Milchglas-Effekt */
     transition: background 0.3s;
 }
 
 #reset-map-btn:hover {
     background-color: rgba(0, 0, 0, 0.8);
 }
+
 
 
 .bg-image {
@@ -195,5 +202,4 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     z-index: -1;
-
 }
