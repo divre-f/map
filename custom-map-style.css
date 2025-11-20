@@ -140,7 +140,7 @@ body {
     opacity: 0.8;
     will-change: transform;
     r: 25px !important;
-    stroke-width: 2px !important;
+    stroke-width: 5px !important;
     transition: none !important;
 }
 
@@ -189,3 +189,4 @@ body {
     z-index: -1;
 
 }
+
