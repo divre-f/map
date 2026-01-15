@@ -209,6 +209,7 @@ body {
     position: absolute;
     width: auto;
     height: auto;
+    pointer-events: none;
 }
 
 .filter-bg-image-left {
@@ -617,4 +618,5 @@ body {
         transform: translateZ(50px);
     }
 }
+
 
