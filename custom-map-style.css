@@ -305,7 +305,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(5, 2, 8, 0.7);
+    background-color: rgba(1, 12, 48, 0.6);
     backdrop-filter: blur(10px);
     opacity: 0;
     pointer-events: none;
@@ -333,25 +333,18 @@ body {
 .info-title {
     font-family: serif;
     font-size: 3rem;
+    font-weight: 100;
     margin: 0;
-    color: #00ffff;
-    letter-spacing: 2px;
-    text-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-}
-
-.info-divider {
-    width: 100px;
-    margin: 30px auto;
-    border: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #00ffff, transparent);
+    color: #fff;
+    font-family: 'Romie Light', serif;
 }
 
 .info-text {
-    font-size: 0.5rem;
+    font-size: 1.4rem;
     line-height: 1.6;
     margin-bottom: 40px;
-    color: #aaa;
+    color: #fff;
+    font-family: 'Romie Light', serif;
 }
 
 #enter-world-btn {
@@ -387,7 +380,7 @@ body {
     align-items: center;
     /* Falls Hintergrund leicht abgedunkelt sein soll:*/
     background-color: rgba(1, 12, 48, 0.6);
-
+    backdrop-filter: blur(10px);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.5s;
@@ -550,7 +543,7 @@ body {
     }
 
     /* Char Card muss jetzt mehr aufs Bild passen */
-     #char-bg-img {
+    #char-bg-img {
         height: 90vh;
         /* Offset fast wegnehmen, damit es zentrierter ist */
         transform: translate3d(70px, 0px, 0px);
@@ -618,6 +611,3 @@ body {
         transform: translateZ(50px);
     }
 }
-
-
-
