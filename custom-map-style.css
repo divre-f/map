@@ -617,19 +617,3 @@ body {
         transform: translateZ(50px);
     }
 }
-
-/* Extra: Falls der Screen sehr flach ist (Landscape Handy) */
-@media (max-height: 600px) {
-    .ui-group.center-left {
-        transform: translateY(-30%) translateX(-21%) scale(0.5);
-    }
-
-    .info-title {
-        font-size: 1.5rem;
-    }
-
-    #char-bg-img {
-        height: 85vh;
-        width: auto;
-    }
-}
