@@ -219,13 +219,6 @@ body {
     user-select: none;
 }
 
-.ui-group.bottom-left {
-    bottom: 40px;
-    left: 40px;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
 /* Buttons */
 .ui-group.top-right button {
     position: absolute;
@@ -311,7 +304,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(5, 2, 8, 0.9);
+    background: rgba(5, 2, 8, 0.7);
     backdrop-filter: blur(10px);
     opacity: 0;
     pointer-events: none;
@@ -338,7 +331,7 @@ body {
 
 .info-title {
     font-family: serif;
-    font-size: 3.5rem;
+    font-size: 3rem;
     margin: 0;
     color: #00ffff;
     letter-spacing: 2px;
@@ -354,7 +347,7 @@ body {
 }
 
 .info-text {
-    font-size: 1.1rem;
+    font-size: 0.5rem;
     line-height: 1.6;
     margin-bottom: 40px;
     color: #aaa;
@@ -491,80 +484,152 @@ body {
     height: 100vh;
     background: url("img/bg.jpg") center/cover no-repeat;
     z-index: -1;
-
 }
 
-/* --- RESPONSIVE FIXES FÜR IFRAMES & LAPTOPS --- */
 
-/* 1. Wenn die Breite unter 1400px fällt (typische Laptop-Größe oder iFrame) */
+
+/* --- MEDIA QUERIES --- */
+
 @media (max-width: 1400px) {
-    
-    /* Wir verkleinern das gesamte UI-Layer und die Overlays auf 80% */
-    .ui-group {
-        /* Zoomt die Buttons und Bilder runter */
-        transform: scale(0.8); 
-        /* WICHTIG: Transform-Origin bestimmt, von wo aus geschrumpft wird */
-    }
 
-    /* Damit die Positionierung stimmt, müssen wir die Origins setzen */
+    /* UI Gruppen auf 80% verkleinern */
     .ui-group.top-right {
-        transform-origin: top right; /* Schrumpft in die Ecke oben rechts */
-    }
-    
-    .ui-group.center-left {
-        transform-origin: center left; /* Schrumpft zum linken Rand */
-    }
-    
-    .ui-group.bottom-left {
-        transform-origin: bottom left; /* Schrumpft in die Ecke unten links */
+        transform: scale(0.8);
     }
 
-    /* Das Info-Overlay (Startscreen) anpassen */
-    .info-title {
-        font-size: 2.5rem; /* Kleiner als 3.5rem */
+    .ui-group.center-left {
+        /* translateY(-50%) ist wichtig für die Zentrierung, scale() kommt dazu */
+        transform: translateY(-50%) translateX(-10%) scale(0.8);
     }
-    .info-card {
-        width: 80%; /* Schmaler */
-        padding: 20px;
+
+    /* Info Overlay anpassen */
+    .info-title {
+        font-size: 2.5rem;
+    }
+
+    .info-text {
+        font-size: 1rem;
+    }
+
+    /* Char Card leicht anpassen */
+    #char-bg-img {
+        height: 90vh;
+        /* Etwas weniger Offset */
+        transform: translate3d(80px, -20px, 0px);
+    }
+
+    #close-overlay-btn {
+        top: 100px;
+        left: 80px;
+        width: 50px;
+        height: 50px;
     }
 }
 
-/* 2. Wenn es noch kleiner wird (Tablet / Kleiner iFrame Ausschnitt) - unter 1000px */
+
+/* --- STUFE 2: TABLET / KLEINER IFRAME (max-width: 1000px) --- */
 @media (max-width: 1000px) {
-    
-    /* UI noch weiter verkleinern */
-    .ui-group {
-        transform: scale(0.65); 
+
+    /* UI Gruppen auf 65% verkleinern */
+    .ui-group.top-right {
+        transform: scale(0.65);
     }
 
-    /* Info Overlay drastisch verkleinern */
+    .ui-group.center-left {
+        transform: translateY(-50%) translateX(-18%) scale(0.65);
+    }
+
+    /* Info Overlay deutlich kleiner */
     .info-title {
         font-size: 2rem;
     }
-    
-    /* Charakter Karte verkleinern, damit sie nicht den Screen sprengt */
-    .char-card {
-        /* Dein Zoom-Effekt nutzt scale(), also nutzen wir hier zoom */
-        zoom: 0.7; 
+
+    .info-card {
+        width: 80%;
     }
-    
-    /* Den Hintergrund der Charakterkarte verschieben, falls er abgeschnitten wird */
+
+    /* Char Card muss jetzt mehr aufs Bild passen */
     #char-bg-img {
-        transform: translate3d(50px, -20px, 0px) !important;
+        height: 80vh;
+        /* Offset fast wegnehmen, damit es zentrierter ist */
+        transform: translate3d(40px, 0px, 0px);
+    }
+
+    #close-overlay-btn {
+        top: 80px;
+        left: 60px;
     }
 }
 
-/* 3. WICHTIG: Höhen-Check! */
-/* Wenn der iFrame sehr flach ist (was in ReadyMag oft passiert), muss das UI auch kleiner werden */
-@media (max-height: 800px) {
-    .ui-group {
-        transform: scale(0.75);
+
+/* --- STUFE 3: MOBILE / SEHR SCHMAL (max-width: 600px) --- */
+@media (max-width: 600px) {
+
+    /* UI Gruppen auf 50% - sehr kompakt */
+    .ui-group.top-right {
+        transform: scale(0.5);
     }
-    .ui-group.top-right { transform-origin: top right; }
-    .ui-group.center-left { transform-origin: center left; }
-    
-    .info-title { font-size: 2.2rem; }
+
+    .ui-group.center-left {
+        transform: translateY(-50%) translateX(-21%) scale(0.5);
+        /* Eventuell auf Mobile etwas nach links schieben, damit es nicht im Weg ist */
+        left: -20px;
+    }
+
+    /* Info Overlay für Handy */
+    .info-title {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
+
+    .info-text {
+        font-size: 0.9rem;
+    }
+
+    .info-card {
+        width: 95%;
+        padding: 0 10px;
+    }
+
+    /* Char Card für Handy (ganz wichtig: kein seitlicher Offset!) */
+    #char-bg-img {
+        height: auto;
+        width: 100%;
+        max-height: 70vh;
+        /* KEIN Offset mehr, schön in die Mitte */
+        transform: translate3d(0px, 0px, 0px);
+    }
+
+    /* Close Button oben drauf */
+    #close-overlay-btn {
+        top: -10px;
+        /* Über das Bild schieben */
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        /* Zentrieren */
+        transform: translateZ(50px);
+        /* Skalierung entfernen */
+    }
+
+    /* Button Hover Effekt auf Mobile deaktivieren (verwirrt oft) */
+    #close-overlay-btn:hover {
+        transform: translateZ(50px);
+    }
 }
 
+/* Extra: Falls der Screen sehr flach ist (Landscape Handy) */
+@media (max-height: 600px) {
+    .ui-group.center-left {
+        transform: translateY(-30%) translateX(-21%) scale(0.5);
+    }
 
+    .info-title {
+        font-size: 1.5rem;
+    }
 
+    #char-bg-img {
+        height: 85vh;
+        width: auto;
+    }
+}
