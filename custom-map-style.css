@@ -550,15 +550,15 @@ body {
     }
 
     /* Char Card muss jetzt mehr aufs Bild passen */
-    #char-bg-img {
-        height: 80vh;
+     #char-bg-img {
+        height: 90vh;
         /* Offset fast wegnehmen, damit es zentrierter ist */
-        transform: translate3d(40px, 0px, 0px);
+        transform: translate3d(70px, 0px, 0px);
     }
 
     #close-overlay-btn {
         top: 80px;
-        left: 60px;
+        left: 55px;
     }
 }
 
@@ -618,5 +618,6 @@ body {
         transform: translateZ(50px);
     }
 }
+
 
 
