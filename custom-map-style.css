@@ -528,7 +528,7 @@ body {
 
 
 /* --- STUFE 2: TABLET / KLEINER IFRAME (max-width: 1000px) --- */
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
 
     /* UI Gruppen auf 65% verkleinern */
     .ui-group.top-right {
@@ -617,3 +617,4 @@ body {
         transform: translateZ(50px);
     }
 }
+
