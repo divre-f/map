@@ -491,4 +491,80 @@ body {
     height: 100vh;
     background: url("img/bg.jpg") center/cover no-repeat;
     z-index: -1;
+
 }
+
+/* --- RESPONSIVE FIXES FÜR IFRAMES & LAPTOPS --- */
+
+/* 1. Wenn die Breite unter 1400px fällt (typische Laptop-Größe oder iFrame) */
+@media (max-width: 1400px) {
+    
+    /* Wir verkleinern das gesamte UI-Layer und die Overlays auf 80% */
+    .ui-group {
+        /* Zoomt die Buttons und Bilder runter */
+        transform: scale(0.8); 
+        /* WICHTIG: Transform-Origin bestimmt, von wo aus geschrumpft wird */
+    }
+
+    /* Damit die Positionierung stimmt, müssen wir die Origins setzen */
+    .ui-group.top-right {
+        transform-origin: top right; /* Schrumpft in die Ecke oben rechts */
+    }
+    
+    .ui-group.center-left {
+        transform-origin: center left; /* Schrumpft zum linken Rand */
+    }
+    
+    .ui-group.bottom-left {
+        transform-origin: bottom left; /* Schrumpft in die Ecke unten links */
+    }
+
+    /* Das Info-Overlay (Startscreen) anpassen */
+    .info-title {
+        font-size: 2.5rem; /* Kleiner als 3.5rem */
+    }
+    .info-card {
+        width: 80%; /* Schmaler */
+        padding: 20px;
+    }
+}
+
+/* 2. Wenn es noch kleiner wird (Tablet / Kleiner iFrame Ausschnitt) - unter 1000px */
+@media (max-width: 1000px) {
+    
+    /* UI noch weiter verkleinern */
+    .ui-group {
+        transform: scale(0.65); 
+    }
+
+    /* Info Overlay drastisch verkleinern */
+    .info-title {
+        font-size: 2rem;
+    }
+    
+    /* Charakter Karte verkleinern, damit sie nicht den Screen sprengt */
+    .char-card {
+        /* Dein Zoom-Effekt nutzt scale(), also nutzen wir hier zoom */
+        zoom: 0.7; 
+    }
+    
+    /* Den Hintergrund der Charakterkarte verschieben, falls er abgeschnitten wird */
+    #char-bg-img {
+        transform: translate3d(50px, -20px, 0px) !important;
+    }
+}
+
+/* 3. WICHTIG: Höhen-Check! */
+/* Wenn der iFrame sehr flach ist (was in ReadyMag oft passiert), muss das UI auch kleiner werden */
+@media (max-height: 800px) {
+    .ui-group {
+        transform: scale(0.75);
+    }
+    .ui-group.top-right { transform-origin: top right; }
+    .ui-group.center-left { transform-origin: center left; }
+    
+    .info-title { font-size: 2.2rem; }
+}
+
+
+
