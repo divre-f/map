@@ -455,7 +455,7 @@ body {
         width: 350px;
         right: 10%;
         /* Ganz nah an den Rand */
-        top: 30%;
+        top: 25%;
         /* Etwas höher */
     }
 
@@ -465,8 +465,8 @@ body {
 
     #enter-world-btn {
         font-size: 2.5rem;
-        bottom: 40%;
-        right: 14%;
+        bottom: 37.7%;
+        right: 13.6%;
     }
 }
 
@@ -751,3 +751,4 @@ body {
     }
 
 }
+
