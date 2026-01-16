@@ -21,22 +21,36 @@
         <div class="ui-group center-left">
             <img src="img/buttonsmap_filter.png" class="filter-bg-image-left" alt="">
 
-            <button class="filter-btn active" data-filter="trickster" title="Die Trickster"><span></span></button>
-            <button class="filter-btn active" data-filter="hero" title="Die Helden"><span></span></button>
-            <button class="filter-btn active" data-filter="dragon" title="Die Drachen"><span></span></button>
-            <button id="reset-filter-btn">Filter zurücksetzen</button>
+            <button class="filter-btn active" data-filter="trickster" title="Die Trickster">
+                <img src="img/ornamente_2.png" alt="Trickster-Filter">
+            </button>
+            <button class="filter-btn active" data-filter="hero" title="Die Helden">
+                <img src="img/ornamente_1.png" alt="Hero-Filter">
+            </button>
+            <button class="filter-btn active" data-filter="dragon" title="Die Drachen">
+                <img src="img/ornamente_3.png" alt="Dragon-Filter">
+            </button>
+            <button id="reset-filter-btn">ALL</button>
         </div>
 
     </div>
 
     <div id="info-overlay" class="is-visible">
         <div class="info-card">
-            <h1 class="info-title">Info Overlay</h1>
-            <p class="info-text">
-                Willkommen, Reisender.<br>
-                Klicke "Die Welt betreten", um zu starten.
-            </p>
-            <button id="enter-world-btn">Die Welt betreten</button>
+            <img class="info-background" src="img/welcometraveler2.png" alt="Welcome Traveler">
+
+            <div class="info-content">
+                <p class="info-text">
+                    Discover the world's most famous mythical figures,
+                    categorized by three archetypes: Hero, Trickster and Dragon.
+                    Navigate the map by zooming and clicking on the
+                    glowing points to learn more about each legend.
+                    Use the sidebar on the left to filter by category.
+                    For more in-depth stories and lore, visit our Archive.
+                </p>
+            </div>
+
+            <button id="enter-world-btn">ENTER MAP</button>
         </div>
     </div>
 
@@ -134,13 +148,10 @@
         </div>
     </div>
 
-    <!--<section class="bg-image"></section>-->
+    <section class="bg-image"></section>
 
     <script src="character-data.js"></script>
     <script src="custom-map-script.js"></script>
 </body>
 
-
 </html>
-
-

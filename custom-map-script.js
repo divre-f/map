@@ -17,6 +17,8 @@ function initMap() {
     const infoBtn = document.getElementById('info-btn');
     const enterBtn = document.getElementById('enter-world-btn');
     const closeBtn = document.getElementById('close-overlay-btn');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const resetFilterBtn = document.getElementById('reset-filter-btn');
 
     // Overlays
     const infoOverlay = document.getElementById('info-overlay');
@@ -156,7 +158,67 @@ function initMap() {
         }
     }
 
-    // --- 7. EVENT LISTENER ---
+
+    // --- 7. FILTER-LOGIK ---
+    // Hilfsfunktion: Filter anwenden
+    function applyFilter(category) {
+        // A) Buttons updaten
+        filterBtns.forEach(btn => {
+            if (btn.dataset.filter === category) {
+                btn.classList.add('active');
+                btn.classList.remove('inactive');
+            } else {
+                btn.classList.remove('active');
+                btn.classList.add('inactive');
+            }
+        });
+
+        // B) Marker filtern (mit der neuen CSS-Klasse)
+        markers.forEach(marker => {
+            // Prüfen, ob der Marker die Kategorie hat
+            if (marker.classList.contains(category)) {
+                // ANZEIGEN: Wir entfernen die "Versteckt"-Klasse
+                marker.classList.remove('is-hidden');
+            } else {
+                // AUSBLENDEN: Wir fügen die "Versteckt"-Klasse hinzu
+                marker.classList.add('is-hidden');
+            }
+        });
+    }
+
+    // Hilfsfunktion: Reset
+    function resetFilter() {
+        // Buttons Reset
+        filterBtns.forEach(btn => {
+            btn.classList.add('active');
+            btn.classList.remove('inactive');
+        });
+
+        // Alle Marker wieder sichtbar machen
+        markers.forEach(marker => {
+            marker.classList.remove('is-hidden');
+        });
+    }
+
+    // Event Listener für die runden Buttons
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const filterType = btn.dataset.filter;
+            applyFilter(filterType);
+        });
+    });
+
+    // Event Listener für Reset Button
+    if (resetFilterBtn) {
+        resetFilterBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            resetFilter();
+        });
+    }
+
+
+    // --- 8. EVENT LISTENER ---
 
     if (enterBtn) enterBtn.addEventListener('click', () => infoOverlay.classList.remove('is-visible'));
     if (infoBtn) infoBtn.addEventListener('click', () => infoOverlay.classList.add('is-visible'));
@@ -259,3 +321,6 @@ function initMap() {
         card.style.transform = `scale(${BASE_SCALE}) rotateY(${xAxis}deg) rotateX(${-yAxis}deg)`;
     });
 }
+
+
+
