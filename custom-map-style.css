@@ -534,26 +534,6 @@ body {
     }
 }
 
-/* 5. SEHR FLACHE SCREENS (Landscape Handy) */
-@media (max-height: 600px) {
-    .info-content {
-        top: 10%;
-        width: 60%;
-        right: 5%;
-        left: auto;
-        transform: none !important;
-        /* Reset Center Trick */
-        text-align: left;
-    }
-
-    #enter-world-btn {
-        bottom: 5%;
-        right: 5%;
-        left: auto;
-        transform: none !important;
-        font-size: 1.5rem;
-    }
-}
 
 
 
@@ -769,4 +749,5 @@ body {
     #close-overlay-btn:hover {
         transform: translateZ(50px);
     }
+
 }
