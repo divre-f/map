@@ -336,7 +336,10 @@ body {
     pointer-events: auto;
 }
 
+
 /* --- INFO OVERLAY (FULLSCREEN) --- */
+
+
 #info-overlay {
     position: fixed;
     top: 0;
@@ -365,7 +368,6 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    /* Damit nichts raussteht */
 }
 
 /* DAS HINTERGRUNDBILD */
@@ -376,164 +378,56 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
-
+    object-position: center 20%;
     z-index: 0;
-    /* Ganz hinten */
 }
 
-/* DER TEXT & BUTTON CONTAINER */
-.info-content {
-    position: absolute;
-    z-index: 10;
-    top: 26%;
-    right: 10%;
-    width: 600px;
-    text-align: left;
-    transform: translateY(20px);
-    transition: transform 0.8s ease-out;
-}
-
-/* Wenn Overlay sichtbar ist, rutscht der Text an seinen Platz */
-#info-overlay.is-visible .info-content {
-    transform: translateY(0);
-}
-
-.info-text {
-    font-size: 1.2rem;
-    line-height: 1.6;
-    color: #fff;
-    /* Textfarbe */
-    font-family: 'Romie Light', serif;
-}
 
 #enter-world-btn {
     position: absolute;
     z-index: 15;
     top: auto;
-    bottom: 38%;
-    right: 16.2%;
+    bottom: 22.5%;
+    right: 17.8%;
     left: auto;
-    padding: 15px 40px;
     background: transparent;
     border: none;
     color: #fff;
-    font-size: 4rem;
+    font-size: clamp(2rem, 4vw, 4rem);
     font-family: 'Romie Light', serif;
     cursor: pointer;
-
-    /* Animation beim Erscheinen (wie beim Text) */
-    transform: translateY(20px);
-    transition: opacity 0.3s, transform 0.8s ease-out, color 0.3s;
+    transform: scale(1);
+    transition: opacity 0.3s, transform 0.5s ease-out, bottom 0.3s, right 0.3s;
 }
+
+#enter-world-btn:hover {
+    transform: scale(1.1);
+}
+
+
 
 @media (max-width: 1440px) {
-    .info-content {
-        width: 450px;
-        /* Textblock schmaler */
-        right: 8%;
-        /* Näher an den Rand */
-        top: 25%;
-    }
-
-    .info-text {
-        font-size: 1.1rem;
-        /* Schrift etwas kleiner */
-    }
-
     #enter-world-btn {
-        font-size: 3rem;
-        /* Button kleiner */
-        bottom: 35%;
-        right: 12%;
-        /* Button muss dem Text folgen */
+        bottom: 24%;
+        right: 15%;
     }
 }
 
-@media (max-width: 1100px) {
-    .info-content {
-        width: 350px;
-        right: 8%;
-        /* Ganz nah an den Rand */
-        top: 25%;
-        /* Etwas höher */
-    }
-
-    .info-text {
-        font-size: 0.7rem;
-    }
-
+@media (max-width: 1024px) {
     #enter-world-btn {
-        font-size: 2.5rem;
-        bottom: 37.7%;
-        right: 13%;
+        bottom: 23%;
+        right: 10%;
     }
 }
 
 @media (max-width: 768px) {
-
-    /* Hintergrund abdunkeln, damit Text überall lesbar ist */
-    .info-background {
-        opacity: 0.6;
-    }
-
-    .info-content {
-        width: 80%;
-        /* Fast volle Breite */
-        left: 50%;
-        /* Zentrieren */
-        right: auto;
-        top: 20%;
-        transform: translateX(-50%) translateY(20px);
-        /* Zentrier-Trick */
-        text-align: center;
-        /* Text zentrieren */
-    }
-
-    /* Fix für Animation bei Center-Pos */
-    #info-overlay.is-visible .info-content {
-        transform: translateX(-50%) translateY(0);
-    }
-
     #enter-world-btn {
         left: 50%;
         right: auto;
         bottom: 15%;
-        /* Nach unten schieben */
-        transform: translateX(-50%) translateY(20px);
-        font-size: 2.5rem;
         width: 100%;
-        text-align: center;
-    }
-
-    /* Fix für Button Animation bei Center-Pos */
-    #info-overlay.is-visible #enter-world-btn {
-        transform: translateX(-50%) translateY(0);
-    }
-
-    #enter-world-btn:hover {
-        transform: translateX(-50%) translateY(0) scale(1.05);
     }
 }
-
-/* 4. HANDY (max-width: 480px) */
-@media (max-width: 480px) {
-    .info-content {
-        top: 15%;
-        width: 90%;
-    }
-
-    .info-text {
-        font-size: 0.95rem;
-        /* Gut lesbar auf Handy */
-    }
-
-    #enter-world-btn {
-        font-size: 2rem;
-        bottom: 10%;
-    }
-}
-
 
 
 
@@ -749,8 +643,4 @@ body {
     #close-overlay-btn:hover {
         transform: translateZ(50px);
     }
-
 }
-
-
-

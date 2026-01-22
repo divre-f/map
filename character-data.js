@@ -5,7 +5,7 @@ const characterData = {
     // KATEGORIE: TRICKSTER
     "marker-manannan": {
         category: "Trickster",
-        image: "img/manannan.webp"
+        image: "img/mannanan.webp"
     },
 
     "marker-loki": {
@@ -46,7 +46,7 @@ const characterData = {
 
     "marker-cuchulainn": {
         category: "Trickster",
-        image: "img/cuchulainn.webp"
+        image: "img/chulainn.webp"
     },
 
     "marker-gilgamesh": {
