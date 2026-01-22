@@ -586,8 +586,8 @@ body {
         transform: scale(0.65);
     }
 
-    .ui-group.center-left {
-        transform: translateY(-50%) translateX(-18%) scale(0.65);
+   .ui-group.center-left {
+        transform: translateY(-40%) translateX(-25%) scale(0.55);
     }
 
     /* Char Card muss jetzt mehr aufs Bild passen */
@@ -646,4 +646,5 @@ body {
     }
 
 }
+
 
