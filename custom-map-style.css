@@ -413,10 +413,10 @@ body {
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1030px) {
     #enter-world-btn {
-        bottom: 23%;
-        right: 10%;
+        bottom: 28%;
+        right: 17%;
     }
 }
 
@@ -643,4 +643,5 @@ body {
     #close-overlay-btn:hover {
         transform: translateZ(50px);
     }
+
 }
