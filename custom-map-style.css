@@ -214,13 +214,14 @@ body {
     position: absolute;
     width: auto;
     height: auto;
+    pointer-events: none !important;
 }
 
 .filter-bg-image-left {
     display: block;
     width: 450px;
     height: auto;
-    pointer-events: none;
+    pointer-events: none !important;
     user-select: none;
 }
 
@@ -270,6 +271,7 @@ body {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+    pointer-events: auto !important;
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -393,7 +395,7 @@ body {
     background: transparent;
     border: none;
     color: #fff;
-    font-size: clamp(2rem, 4vw, 4rem);
+    font-size: clamp(2rem, 3.5vw, 4rem);
     font-family: 'Romie Light', serif;
     cursor: pointer;
     transform: scale(1);
@@ -586,7 +588,7 @@ body {
         transform: scale(0.65);
     }
 
-   .ui-group.center-left {
+    .ui-group.center-left {
         transform: translateY(-40%) translateX(-25%) scale(0.55);
     }
 
@@ -644,7 +646,4 @@ body {
     #close-overlay-btn:hover {
         transform: translateZ(50px);
     }
-
 }
-
-
